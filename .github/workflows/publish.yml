@@ -1,0 +1,24 @@
+name: Publish to npm
+
+# Publishes with npm Trusted Publishing (OIDC) — no NPM_TOKEN secret needed.
+# One-time setup on npmjs.com: package Settings -> Trusted Publisher -> GitHub Actions
+#   owner: examplessdk-lgtm | repo: create-oneorigin-app | workflow: publish.yml
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - run: npm install -g npm@latest
+      - run: npm publish --provenance --access public
